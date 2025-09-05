@@ -12,6 +12,7 @@ const Navbar = ({search, setSearch}) => {
     useEffect(()=>{
     } , [user])
 
+    console.log('this is coming  from the navbar component about the user ',user)
     const logout = ()=>{
       localStorage.removeItem("jwt_token")
       sessionStorage.clear()

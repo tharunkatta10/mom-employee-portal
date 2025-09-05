@@ -17,7 +17,7 @@ const UserProvider = ({children})=>{
         const token = localStorage.getItem("jwt_token")
         setJwtToken(token)
         if(token){
-           const decoded =  jwtDecode(token)
+           const decoded =  jwtDecode(token)           
             setUser(decoded)
         }
     } , [])

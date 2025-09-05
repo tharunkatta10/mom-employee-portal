@@ -45,6 +45,7 @@ const Login = () => {
         const data = await response.json()
         console.log(data.jwtToken)
         const decoded = jwtDecode(data.jwtToken)
+        // console.log("this is details after decodec",decoded)
         setLogin(data.jwtToken , decoded)
              if(decoded.isAdmin){
                navigate('/admin')
