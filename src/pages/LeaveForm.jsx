@@ -14,7 +14,8 @@ const LeaveForm = () => {
     leaveType: "",
   });
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toString().split("T")[0]
+
   const [fieldError , setFieldError] = useState(false)
 
   const {jwtToken} = useContext(UserContext)
@@ -59,6 +60,13 @@ const LeaveForm = () => {
 
     if (response.ok) {
       console.log("Successfully posted data to backend");
+      setFormData({
+        from:"" , 
+        to:"" , 
+        leaveType:"" , 
+        reason:""
+      })
+      toast.success("submited successfully")
     } else {
       console.log("Unable to post data to backend");
       toast.error("Unable to post data to backend")
@@ -89,8 +97,8 @@ const LeaveForm = () => {
                   name="from"
                   value={formData.from}
                   onChange={handleChange}
-                  min={today}
                   className="border rounded-lg p-2 "
+                  min={formData.from || today}
                 />
               </div>
 
@@ -101,8 +109,8 @@ const LeaveForm = () => {
                   name="to"
                   value={formData.to}
                   onChange={handleChange}
-                  min={formData.from || today} 
                   className="border rounded-lg p-2 "
+                  min={formData.from || today}
                 />
               </div>
             </div>
