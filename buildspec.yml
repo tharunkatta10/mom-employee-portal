@@ -1,0 +1,23 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - REPO_URI="$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPOSITORY"
+      - REGISTRY_URI="$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REGISTRY_URI
+      - echo Generating image tag...
+      - TAG="$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+  build:
+    commands:
+      - echo Building Docker image....
+      - docker build -t $REPO_URI:$TAG .
+  post_build:
+    commands:
+      - echo Pushing image to ECR...
+      - docker push $REPO_URI:$TAG
+      - echo Creating imagedefinitions.json for ECS deployment...
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$CONTAINER_NAME" "$REPO_URI:$TAG" > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
